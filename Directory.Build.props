@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <GitExtensionsPath>c:\DEV\Own\gitextensions.shared</GitExtensionsPath>
+    <LibPath>..\..\..\gitextensions.shared</LibPath>
+  </PropertyGroup>
+
+</Project>

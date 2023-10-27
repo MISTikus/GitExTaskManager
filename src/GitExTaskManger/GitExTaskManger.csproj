@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>true</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Domain.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Services.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="GitExtensions.Extensibility" Version="0.3.*" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GitExtensionsReferenceVersion>v4</GitExtensionsReferenceVersion>
+  </PropertyGroup>
+
+  <!-- Reference to GitExtensions dlls. -->
+  <ItemGroup>
+    <Reference Include="GitExtUtils" HintPath="$(LibPath)\GitExtUtils.dll" />
+    <Reference Include="GitUI" HintPath="$(LibPath)\GitUI.dll" />
+    <Reference Include="GitUIPluginInterfaces" HintPath="$(LibPath)\GitUIPluginInterfaces.dll" />
+    <Reference Include="ResourceManager" HintPath="$(LibPath)\ResourceManager.dll" />
+    <Reference Include="System.ComponentModel.Composition" HintPath="$(LibPath)\System.ComponentModel.Composition.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\" />
+  </ItemGroup>
+
+  <!-- Pack as .nupkg with dependency on GitExtensions.Extensibility -->
+  <PropertyGroup>
+    <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
+    <Authors>MISTikus</Authors>
+    <Company>TakeDareCom</Company>
+    <Description>GitExtensions task manger plugin.</Description>
+    <PackageProjectUrl>https://github.com/MISTikus/GitExTaskManger</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/MISTikus/GitExTaskManager/master/assets/TaskManager.png</PackageIconUrl>
+    <PackageTags>GitExtensions;TaskManager</PackageTags>
+  </PropertyGroup>
+  <Target Name="SetPackageProperties" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <NuspecProperties>
+        id=$(PackageId);
+        version=$(PackageVersion);
+        configuration=$(Configuration);
+        tags=$(PackageTags.Replace(';',' '));
+        projectUrl=$(PackageProjectUrl);
+        iconUrl=$(PackageIconUrl);
+        repositoryUrl=$(RepositoryUrl);
+        repositoryType=$(RepositoryType);
+        repositoryCommit=$(RepositoryCommit);
+        author=$(Authors);
+        copyright=$(Copyright);
+        description=$(Description);
+        targetDir=$(TargetDir);
+      </NuspecProperties>
+    </PropertyGroup>
+  </Target>
+
+</Project>
