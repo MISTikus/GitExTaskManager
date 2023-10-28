@@ -73,21 +73,16 @@ namespace GitExTaskManger
 
         #region IEnumerable<ISetting>
 
-        private static readonly List<ISetting> properties;
+        private static readonly List<ISetting> properties = new(4)
+        {
+            ExecutablePathProperty,
+            ExecutableArgumentsProperty,
+            IsTopLevelSearchedOnlyProperty,
+            EnableVSCodeWorkspacesProperty,
+            ShouldRunAsAdminProperty
+        };
 
         public static bool HasProperties => properties.Count > 0;
-
-        static PluginSettings()
-        {
-            properties = new List<ISetting>(4)
-            {
-                ExecutablePathProperty,
-                ExecutableArgumentsProperty,
-                IsTopLevelSearchedOnlyProperty,
-                EnableVSCodeWorkspacesProperty,
-                ShouldRunAsAdminProperty
-            };
-        }
 
         public IEnumerator<ISetting> GetEnumerator()
             => properties.GetEnumerator();

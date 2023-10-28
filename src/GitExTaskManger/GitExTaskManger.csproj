@@ -8,34 +8,35 @@
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
+  
+  <PropertyGroup>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_GitExtensionsDownloadPath>$([System.IO.Path]::Combine('$(ProjectDir)', '$(GitExtensionsDownloadPath)'))</_GitExtensionsDownloadPath>
+    <_GitExtensionsDownloadScriptPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Download-GitExtensions.ps1'))</_GitExtensionsDownloadScriptPath>
+  </PropertyGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>Domain.UnitTests</_Parameter1>
+      <_Parameter1>GitExTaskManager.UnitTests</_Parameter1>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>Services.UnitTests</_Parameter1>
+      <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
   
-  <ItemGroup>
-    <PackageReference Include="GitExtensions.Extensibility" Version="0.3.*" />
-  </ItemGroup>
-
   <PropertyGroup>
     <GitExtensionsReferenceVersion>v4</GitExtensionsReferenceVersion>
   </PropertyGroup>
 
   <!-- Reference to GitExtensions dlls. -->
   <ItemGroup>
-    <Reference Include="GitExtUtils" HintPath="$(LibPath)\GitExtUtils.dll" />
-    <Reference Include="GitUI" HintPath="$(LibPath)\GitUI.dll" />
-    <Reference Include="GitUIPluginInterfaces" HintPath="$(LibPath)\GitUIPluginInterfaces.dll" />
-    <Reference Include="ResourceManager" HintPath="$(LibPath)\ResourceManager.dll" />
-    <Reference Include="System.ComponentModel.Composition" HintPath="$(LibPath)\System.ComponentModel.Composition.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
+    <Reference Include="GitExtUtils" HintPath="$(GitExtensionsDownloadPath)\GitExtUtils.dll" />
+    <Reference Include="GitUI" HintPath="$(GitExtensionsDownloadPath)\GitUI.dll" />
+    <Reference Include="GitUIPluginInterfaces" HintPath="$(GitExtensionsDownloadPath)\GitUIPluginInterfaces.dll" />
+    <Reference Include="ResourceManager" HintPath="$(GitExtensionsDownloadPath)\ResourceManager.dll" />
+    <Reference Include="System.ComponentModel.Composition" HintPath="$(GitExtensionsDownloadPath)\System.ComponentModel.Composition.dll" />
   </ItemGroup>
 
   <!-- Pack as .nupkg with dependency on GitExtensions.Extensibility -->
@@ -66,6 +67,21 @@
         targetDir=$(TargetDir);
       </NuspecProperties>
     </PropertyGroup>
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Message Text="Executing postbuild event provided by GitExtensions.Extensibility" />
+    <MakeDir Directories="$(GitExtensionsPluginsPath)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
+    <Message Text="Completed postbuild event provided by GitExtensions.Extensibility" />
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="$(BuildDependsOn)">
+    <Message Text="Executing prebuild event provided by GitExtensions.Extensibility" />
+    <MakeDir Directories="$(_GitExtensionsDownloadPath)" />
+    <Error Condition="!Exists($(GitExtensionsExecutablePath)) and !Exists($(_GitExtensionsDownloadScriptPath))" Text="Path to Git Extensions portable download script is wrong. Current value '$(_GitExtensionsDownloadScriptPath)'." />
+    <Exec Condition="!Exists($(GitExtensionsExecutablePath))" Command="powershell.exe -ExecutionPolicy Unrestricted $(_GitExtensionsDownloadScriptPath) -ExtractRootPath $(_GitExtensionsDownloadPath) -Version $(GitExtensionsReferenceVersion) -Source $(GitExtensionsReferenceSource)" />
+    <Message Text="Completed prebuild event provided by GitExtensions.Extensibility" />
   </Target>
 
 </Project>

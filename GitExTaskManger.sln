@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3E5B8767-2AEE-4334-AE60-517A67B90CC0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.UnitTests", "tests\Domain.UnitTests\Domain.UnitTests.csproj", "{A9FF19C7-9E03-47D5-9129-7DA700EDB08C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExTaskManager.UnitTests", "tests\GitExTaskManager.UnitTests\GitExTaskManager.UnitTests.csproj", "{A9FF19C7-9E03-47D5-9129-7DA700EDB08C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

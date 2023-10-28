@@ -1,4 +1,5 @@
 ﻿using GitExTaskManger.Controls;
+using GitExTaskManger.Domain;
 using GitExTaskManger.Properties;
 using GitExTaskManger.Services;
 using GitUI;
@@ -23,32 +24,33 @@ namespace GitExTaskManger
             Icon = Resources.Icon;
         }
 
-        public override void Register(IGitUICommands commands)
+        public override void Register(IGitUICommands gitUiCommands)
         {
-            base.Register(commands);
+            base.Register(gitUiCommands);
 
             Configuration = new PluginSettings(Settings);
 
-            if (commands.GitModule.IsValidGitWorkingDir())
+            if (gitUiCommands.GitModule.IsValidGitWorkingDir())
             {
-                var mainMenu = FindMainMenu(commands);
-                if (mainMenu != null && FindMainMenuItem(commands, mainMenu) == null)
+                var mainMenu = FindMainMenu(gitUiCommands);
+                if (mainMenu != null && FindMainMenuItem(gitUiCommands, mainMenu) == null)
                 {
-                    var provider = new GitSolutionFileProvider(commands.GitModule.WorkingDir, commands.GitModule.GitExecutable);
+                    var provider = new GitFileProvider(gitUiCommands.GitModule.WorkingDir, gitUiCommands.GitModule.GitExecutable);
 
-                    mainMenu.Items.Add(new SolutionListMenuItem(provider, Configuration));
+                    var manager = new TaskManger(provider);
+                    mainMenu.Items.Add(new TaskManagerMenuItem(manager));
                 }
             }
         }
 
-        public override void Unregister(IGitUICommands commands)
+        public override void Unregister(IGitUICommands gitUiCommands)
         {
-            base.Unregister(commands);
+            base.Unregister(gitUiCommands);
 
-            var mainMenu = FindMainMenu(commands);
+            var mainMenu = FindMainMenu(gitUiCommands);
             if (mainMenu != null)
             {
-                var mainMenuItem = FindMainMenuItem(commands, mainMenu);
+                var mainMenuItem = FindMainMenuItem(gitUiCommands, mainMenu);
                 if (mainMenuItem != null)
                 {
                     mainMenu.Items.Remove(mainMenuItem);
@@ -60,9 +62,9 @@ namespace GitExTaskManger
         public override IEnumerable<ISetting> GetSettings()
             => Configuration;
 
-        public override bool Execute(GitUIEventArgs e)
+        public override bool Execute(GitUIEventArgs args)
         {
-            e.GitUICommands.StartSettingsDialog(this);
+            args.GitUICommands.StartSettingsDialog(this);
             return false;
         }
 
@@ -78,10 +80,10 @@ namespace GitExTaskManger
             return null;
         }
 
-        private static SolutionListMenuItem FindMainMenuItem(IGitUICommands commands, MenuStripEx mainMenu = null)
+        private static TaskManagerMenuItem FindMainMenuItem(IGitUICommands commands, MenuStripEx mainMenu = null)
         {
             mainMenu ??= FindMainMenu(commands);
-            return mainMenu?.Items.OfType<SolutionListMenuItem>().FirstOrDefault();
+            return mainMenu?.Items.OfType<TaskManagerMenuItem>().FirstOrDefault();
         }
     }
 }

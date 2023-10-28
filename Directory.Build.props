@@ -1,8 +1,27 @@
 <Project>
 
   <PropertyGroup>
-    <GitExtensionsPath>c:\DEV\Own\gitextensions.shared</GitExtensionsPath>
-    <LibPath>..\..\..\gitextensions.shared</LibPath>
+    <GitExtensionsDownloadPath Condition="$(GitExtensionsDownloadPath) == ''">..\..\..\gitextensions.shared</GitExtensionsDownloadPath>
+    <!-- path is relative to $(ProjectDir) -->
+    <GitExtensionsReferenceVersion Condition="$(GitExtensionsReferenceVersion) == ''">latest</GitExtensionsReferenceVersion>
+    <!-- 'latest' or 'v3.1' (= tag from GitHub releases) or 'v3.1.0.5877' (= build number from AppVeyor)-->
+    <GitExtensionsReferenceSource Condition="$(GitExtensionsReferenceSource) == ''">GitHub</GitExtensionsReferenceSource>
+    <!-- 'GitHub' or 'AppYevor' -->
+    <GitExtensionsPath Condition="$(GitExtensionsPath) == ''">$([System.IO.Path]::Combine('$(ProjectDir)', '$(GitExtensionsDownloadPath)'))</GitExtensionsPath>
+    <!-- for local builds (no download) -->
+    <GitExtensionsPluginsPath>$([System.IO.Path]::Combine('$(GitExtensionsPath)', 'UserPlugins'))</GitExtensionsPluginsPath>
+    <GitExtensionsExecutablePath>$([System.IO.Path]::Combine('$(GitExtensionsPath)', 'GitExtensions.exe'))</GitExtensionsExecutablePath>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.12.0.78982">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  
 </Project>

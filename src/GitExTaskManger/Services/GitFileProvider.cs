@@ -2,16 +2,18 @@
 using System.Text;
 
 namespace GitExTaskManger.Services;
-internal class GitSolutionFileProvider : ISolutionFileProvider
+internal class GitFileProvider : IFileProvider
 {
     private readonly string rootPath;
     private readonly IExecutable executor;
 
-    public GitSolutionFileProvider(string rootPath, IExecutable executor)
+    public GitFileProvider(string rootPath, IExecutable executor)
     {
         this.rootPath = rootPath;
         this.executor = executor;
     }
+
+    public void Create(string fileName) => throw new NotImplementedException();
 
     public async Task<IReadOnlyCollection<string>> GetListAsync(bool isTopLevelSearchOnly, bool includeWorkspaces)
     {
@@ -29,6 +31,8 @@ internal class GitSolutionFileProvider : ISolutionFileProvider
     }
 }
 
-internal interface ISolutionFileProvider
+internal interface IFileProvider
 {
+    void Create(string fileName);
+    Task<IReadOnlyCollection<string>> GetListAsync(bool isTopLevelSearchOnly, bool includeWorkspaces);
 }
