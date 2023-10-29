@@ -27,7 +27,7 @@ internal class ToDoMenuItem : ToolStripMenuItem
 
     protected override void OnClick(EventArgs e)
     {
-        var form = new ToDoListForm(type);
+        var form = new ToDoListForm(type, taskManger);
         form.Show();
 
         base.OnClick(e);

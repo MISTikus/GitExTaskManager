@@ -15,20 +15,19 @@ public class TaskManagerTests
         this.sut = new TaskManger(this.fileProvider.Object);
     }
 
-    [Theory]
-    [MemberData(nameof(Add_ShouldCreate_File_Data))]
-    public void Add_ShouldCreate_File(ItemType type)
+    [Fact]
+    public void Add_ShouldCreate_File()
     {
         // Arrange
         var title = Guid.NewGuid().ToString();
-        var expectedFileName = $"tasks/{type.ToString().ToLower()}/{title[..5]}_";
+        var expectedFileName = $"tasks/issue/{title[..5]}_";
 
         // Act
-        this.sut.Add(new(type,
-            Title: title,
-            Created: DateTime.Now,
-            Description: Guid.NewGuid().ToString(),
-            Comments: null));
+        this.sut.Add(new Issue(DateTime.Now)
+        {
+            Description = Guid.NewGuid().ToString(),
+            Title = title,
+        });
 
         // Assert
         fileProvider.Verify(x => x.Create(It.Is<string>(s => GetVerifyFileNameFunc(s, expectedFileName, ".gtm"))), Times.Once);
@@ -38,8 +37,5 @@ public class TaskManagerTests
     private static bool GetVerifyFileNameFunc(string actual, string expectedFileName, string ext)
         => actual[..(actual.LastIndexOf('_') + 1)] == expectedFileName
             && actual[actual.LastIndexOf('.')..] == ext;
-
-
-    public static object[][] Add_ShouldCreate_File_Data = Enum.GetValues<ItemType>().Select(x => new object[] { x }).ToArray();
     #endregion Private
 }
