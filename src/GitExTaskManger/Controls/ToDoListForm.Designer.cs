@@ -167,11 +167,13 @@ partial class ToDoListForm
         ToDoList.Location = new Point(0, 0);
         ToDoList.MultiSelect = false;
         ToDoList.Name = "ToDoList";
+        ToDoList.ShowItemToolTips = true;
         ToDoList.Size = new Size(1441, 733);
         ToDoList.TabIndex = 4;
         ToDoList.UseCompatibleStateImageBehavior = false;
         ToDoList.View = View.Details;
         ToDoList.SelectedIndexChanged += ToDoList_SelectedIndexChanged;
+        ToDoList.DoubleClick += ToDoList_DoubleClick;
         // 
         // columnHeader4
         // 

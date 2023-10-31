@@ -2,6 +2,7 @@
 using GitExTaskManger.Domain;
 using GitExTaskManger.Properties;
 using GitExTaskManger.Services;
+using GitExTaskManger.Utils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
@@ -35,9 +36,10 @@ namespace GitExTaskManger
                 var mainMenu = FindMainMenu(gitUiCommands);
                 if (mainMenu != null && FindMainMenuItem(gitUiCommands, mainMenu) == null)
                 {
-                    var provider = new GitFileProvider(gitUiCommands.GitModule.WorkingDir, gitUiCommands.GitModule.GitExecutable);
+                    var provider = new FileProvider(gitUiCommands.GitModule.WorkingDir);
+                    var serializer = new GtmSerializer(new());
 
-                    var manager = new TaskManger(provider);
+                    var manager = new TaskManger(provider, serializer);
                     mainMenu.Items.Add(new TaskManagerMenuItem(manager));
                 }
             }

@@ -1,4 +1,6 @@
-﻿using GitExTaskManger.Services;
+﻿using GitExTaskManger.Extensions;
+using GitExTaskManger.Services;
+using GitExTaskManger.Utils;
 
 namespace GitExTaskManger.Domain;
 
@@ -6,15 +8,31 @@ internal class TaskManger : ITaskManger
 {
     private const string baseFolder = ".tasks";
     private readonly IFileProvider fileProvider;
-    private readonly List<Issue> issues = new();
+    private readonly ISerializer serializer;
+    private List<Issue> issues = new();
 
-    public TaskManger(IFileProvider fileProvider) => this.fileProvider = fileProvider;
+    public TaskManger(IFileProvider fileProvider, ISerializer serializer)
+    {
+        this.fileProvider = fileProvider;
+        this.serializer = serializer;
+        //Task.Run(ReloadAsync).ConfigureAwait(false);
+    }
 
-    public void Add(Item item)
+    public Issue[] GetIssues(bool includeResolved) => issues.WhereIf(!includeResolved, x => x.State != ItemState.Resolved).ToArray();
+    public async Task ResolveAsync(Item issue) => throw new NotImplementedException();
+    public async Task RemoveAsync(Item issue) => throw new NotImplementedException();
+
+    public async Task AddAsync(Item item)
     {
         var folder = $"{baseFolder}/{GetFolderName(item.Type)}";
         var fileName = GetFileName(item.Title);
-        fileProvider.Create($"{folder}/{fileName}");
+        var body = this.serializer.Serialize(item);
+        await fileProvider.CreateAsync($"{folder}/{fileName}", body, default);
+    }
+
+    public async Task ReloadAsync()
+    {
+        this.issues = await LoadAsync<Issue>(ItemType.Issue);
     }
 
     private static string GetFolderName(ItemType type) => type.ToString().ToLower();
@@ -22,16 +40,19 @@ internal class TaskManger : ITaskManger
             .Replace(' ', '_')
             [..(title.Length >= 5 ? 5 : title.Length)]}_{Guid.NewGuid().ToString("N")[..5]}.gtm";
 
-    public Issue[] GetIssues(bool includeResolved) => issues.Where(x => x.State != ItemState.Resolved).ToArray();
-    public void Resolve(Item issue) => throw new NotImplementedException();
-    public void Remove(Item issue) => throw new NotImplementedException();
+    private async Task<List<T>> LoadAsync<T>(ItemType issue)
+    {
+        var data = await fileProvider.GetListAsync($"{baseFolder}/{GetFolderName(issue)}", default).ConfigureAwait(false);
+        return data.Select(this.serializer.Deserialize<T>).ToList();
+    }
 }
 
 internal interface ITaskManger
 {
-    public Issue[] GetIssues(bool includeResolved);
+    Issue[] GetIssues(bool includeResolved);
+    Task ReloadAsync();
 
-    void Add(Item item);
-    void Resolve(Item issue);
-    void Remove(Item issue);
+    Task AddAsync(Item item);
+    Task ResolveAsync(Item issue);
+    Task RemoveAsync(Item issue);
 }

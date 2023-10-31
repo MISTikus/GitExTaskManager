@@ -14,6 +14,9 @@ internal partial class ToDoListForm : Form
     {
         this.type = type;
         this.taskManger = taskManger;
+        taskManger.ReloadAsync()
+            .ContinueWith(t => AssignItems())
+            .ConfigureAwait(false);
 
         StatusLabel.Text = "";
         ToDoList.Columns.Clear();
@@ -28,7 +31,7 @@ internal partial class ToDoListForm : Form
         var addForm = new ItemForm(FormActionType.Add, new Issue());
         var result = addForm.ShowDialog();
         if (result == DialogResult.OK)
-            this.taskManger.Add(addForm.Item);
+            this.taskManger.AddAsync(addForm.Item).ConfigureAwait(false);
     }
 
     private void EditButton_Click(object sender, EventArgs e)
@@ -36,19 +39,19 @@ internal partial class ToDoListForm : Form
         var addForm = new ItemForm(FormActionType.Edit, this.taskManger.GetIssues(showResolved)[Selected]);
         var result = addForm.ShowDialog();
         if (result == DialogResult.OK)
-            this.taskManger.Add(addForm.Item);
+            this.taskManger.AddAsync(addForm.Item).ConfigureAwait(false);
     }
 
     private void ResolveButton_Click(object sender, EventArgs e)
     {
         if (Ask($"Are you sure you want to resolve item?\r\n{this.taskManger.GetIssues(showResolved)[Selected].Title}"))
-            this.taskManger.Resolve(this.taskManger.GetIssues(showResolved)[Selected]);
+            this.taskManger.ResolveAsync(this.taskManger.GetIssues(showResolved)[Selected]).ConfigureAwait(false);
     }
 
     private void RemoveButton_Click(object sender, EventArgs e)
     {
         if (Ask($"Are you sure you want to remove item?\r\n{this.taskManger.GetIssues(showResolved)[Selected].Title}"))
-            this.taskManger.Remove(this.taskManger.GetIssues(showResolved)[Selected]);
+            this.taskManger.RemoveAsync(this.taskManger.GetIssues(showResolved)[Selected]).ConfigureAwait(false);
     }
 
     private void ShowResolved_Click(object sender, EventArgs e)
@@ -61,9 +64,29 @@ internal partial class ToDoListForm : Form
         RemoveButton.Enabled = isSelected;
         ResolveButton.Enabled = isSelected;
     }
+
+    private void ToDoList_DoubleClick(object sender, EventArgs e)
+    {
+        var isSelected = ToDoList.SelectedItems.Count != 0;
+        if (!isSelected)
+            return;
+        EditButton_Click(sender, e);
+    }
     #endregion EventHandlers
 
     #region Private methods
+    private void AssignItems()
+    {
+        var items = taskManger.GetIssues(showResolved)
+            .Select(x => new ListViewItem(new string[] { x.Title, x.Created.ToString("u") })
+            {
+                ToolTipText = x.Description
+            })
+            .ToArray();
+        ToDoList.Items.Clear();
+        ToDoList.Items.AddRange(items);
+    }
+
     private ColumnHeader[] GetColumnsByType() => type switch
     {
         _ => new ColumnHeader[]

@@ -1,5 +1,6 @@
 ﻿using GitExTaskManger.Domain;
 using GitExTaskManger.Services;
+using GitExTaskManger.Utils;
 using Moq;
 
 namespace GitExTaskManager.UnitTests.Domain;
@@ -7,30 +8,42 @@ namespace GitExTaskManager.UnitTests.Domain;
 public class TaskManagerTests
 {
     private readonly Mock<IFileProvider> fileProvider;
+    private readonly Mock<ISerializer> serializer;
     private readonly ITaskManger sut;
 
     public TaskManagerTests()
     {
         this.fileProvider = new Mock<IFileProvider>();
-        this.sut = new TaskManger(this.fileProvider.Object);
+        this.serializer = new Mock<ISerializer>();
+        this.sut = new TaskManger(this.fileProvider.Object, this.serializer.Object);
     }
 
     [Fact]
-    public void Add_ShouldCreate_File()
+    public async Task Add_ShouldCreate_File()
     {
         // Arrange
         var title = Guid.NewGuid().ToString();
-        var expectedFileName = $"tasks/issue/{title[..5]}_";
+        var expectedFileName = $".tasks/issue/{title[..5]}_";
+        var body = "bodyToWrite";
 
-        // Act
-        this.sut.Add(new Issue(DateTime.Now)
+        var model = new Issue(DateTime.Now)
         {
             Description = Guid.NewGuid().ToString(),
             Title = title,
-        });
+        };
+
+        this.serializer.Setup(x => x.Serialize<Item>(model))
+            .Returns(body);
+
+        // Act
+        await this.sut.AddAsync(model);
 
         // Assert
-        fileProvider.Verify(x => x.Create(It.Is<string>(s => GetVerifyFileNameFunc(s, expectedFileName, ".gtm"))), Times.Once);
+        this.serializer.Verify(x => x.Serialize<Item>(model), Times.Once);
+        fileProvider.Verify(x => x.CreateAsync(
+            It.Is<string>(s => GetVerifyFileNameFunc(s, expectedFileName, ".gtm")),
+            body,
+            default), Times.Once);
     }
 
     #region Private

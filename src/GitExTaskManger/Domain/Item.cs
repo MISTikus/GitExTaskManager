@@ -35,4 +35,11 @@ internal abstract class Item
         this.description = description;
         State = ItemState.Changed;
     }
+
+    internal void Resolve()
+    {
+        if (State == ItemState.Resolved)
+            return;
+        State = ItemState.Resolved;
+    }
 }
