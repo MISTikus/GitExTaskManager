@@ -29,7 +29,7 @@ internal partial class ItemForm : Form
         this.item.Comments.Add(DateTime.Now, CommentBox.Text);
         CommentsPanel.Controls.Add(CreateCommentControl(this.item.Comments.Last().Value, this.item.Comments.Last().Key));
         ApplyChanged();
-        //CommentBox.Text = "";
+        CommentBox.Text = "";
     }
 
     private void TitleBox_TextChanged(object sender, EventArgs e)
@@ -41,6 +41,7 @@ internal partial class ItemForm : Form
     private void DescriptionBox_TextChanged(object sender, EventArgs e)
     {
         ApplyChanged();
+        this.item.ChangeDescription(DescriptionBox.Text);
     }
 
     private void OkButton_Click(object sender, EventArgs e)

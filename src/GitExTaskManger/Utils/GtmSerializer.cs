@@ -283,7 +283,7 @@ internal class GtmSerializer : ISerializer
     #endregion Deserialize
 }
 
-public record GtmSerializerOptions(string LineBreak = "\n", string Indent = "\t")
+public record GtmSerializerOptions(string LineBreak = "\r\n", string Indent = "\t")
 {
     public Dictionary<Type, (Func<object, string> serializer, Func<string, object> deserializer)> Converters { get; } = new();
 }
