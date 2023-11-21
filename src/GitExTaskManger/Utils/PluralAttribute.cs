@@ -1,4 +1,4 @@
-﻿namespace GitExTaskManger.Utils;
+﻿namespace GitExtensions.TaskManger.Utils;
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 internal class PluralAttribute : Attribute

@@ -1,4 +1,4 @@
-﻿namespace GitExTaskManger.Domain;
+﻿namespace GitExtensions.TaskManger.Domain;
 internal enum ItemState
 {
     Created,

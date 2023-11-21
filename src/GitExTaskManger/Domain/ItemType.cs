@@ -1,6 +1,6 @@
-﻿using GitExTaskManger.Utils;
+﻿using GitExtensions.TaskManger.Utils;
 
-namespace GitExTaskManger.Domain;
+namespace GitExtensions.TaskManger.Domain;
 
 public enum ItemType
 {

@@ -1,7 +1,7 @@
 ﻿using GitUIPluginInterfaces;
 using System.Collections;
 
-namespace GitExTaskManger
+namespace GitExtensions.TaskManger
 {
     internal class PluginSettings : IEnumerable<ISetting>
     {

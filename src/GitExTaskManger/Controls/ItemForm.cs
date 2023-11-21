@@ -1,6 +1,6 @@
-﻿using GitExTaskManger.Domain;
+﻿using GitExtensions.TaskManger.Domain;
 
-namespace GitExTaskManger.Controls;
+namespace GitExtensions.TaskManger.Controls;
 internal partial class ItemForm : Form
 {
     private readonly FormActionType actionType;

@@ -1,8 +1,9 @@
-﻿using GitExTaskManger.Domain;
-using GitExTaskManger.Utils;
+﻿using GitExtensions.TaskManger.Domain;
+using GitExtensions.TaskManger.Utils;
 using System.Reflection;
 
-namespace GitExTaskManger.Controls;
+namespace GitExtensions.TaskManger.Controls;
+
 internal class ToDoMenuItem : ToolStripMenuItem
 {
     private readonly ItemType type;

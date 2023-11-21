@@ -1,4 +1,4 @@
-using GitExTaskManger.Services;
+using GitExtensions.TaskManger.Services;
 
 namespace GitExTaskManager.UnitTests.Services;
 

@@ -1,6 +1,6 @@
-﻿using GitExTaskManger.Domain;
+﻿using GitExtensions.TaskManger.Domain;
 
-namespace GitExTaskManger.Controls;
+namespace GitExtensions.TaskManger.Controls;
 internal class TaskManagerMenuItem : ToolStripMenuItem
 {
     internal TaskManagerMenuItem(ITaskManger taskManger)

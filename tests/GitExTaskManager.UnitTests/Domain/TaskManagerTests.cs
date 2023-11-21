@@ -1,6 +1,6 @@
-﻿using GitExTaskManger.Domain;
-using GitExTaskManger.Services;
-using GitExTaskManger.Utils;
+﻿using GitExtensions.TaskManger.Domain;
+using GitExtensions.TaskManger.Services;
+using GitExtensions.TaskManger.Utils;
 using Moq;
 
 namespace GitExTaskManager.UnitTests.Domain;
@@ -10,12 +10,13 @@ public class TaskManagerTests
     private readonly Mock<IFileProvider> fileProvider;
     private readonly Mock<ISerializer> serializer;
     private readonly ITaskManger sut;
+    private const string ext = "file";
 
     public TaskManagerTests()
     {
         this.fileProvider = new Mock<IFileProvider>();
         this.serializer = new Mock<ISerializer>();
-        this.sut = new TaskManger(this.fileProvider.Object, this.serializer.Object);
+        this.sut = new TaskManger(this.fileProvider.Object, this.serializer.Object, ext);
     }
 
     [Fact]
@@ -41,7 +42,7 @@ public class TaskManagerTests
         // Assert
         this.serializer.Verify(x => x.Serialize<Item>(model), Times.Once);
         fileProvider.Verify(x => x.CreateAsync(
-            It.Is<string>(s => GetVerifyFileNameFunc(s, expectedFileName, ".gtm")),
+            It.Is<string>(s => GetVerifyFileNameFunc(s, expectedFileName, $".{ext}")),
             body,
             default), Times.Once);
     }

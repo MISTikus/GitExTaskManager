@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-namespace GitExTaskManger.Utils;
+namespace GitExtensions.TaskManger.Utils;
 
 internal class GtmSerializer : ISerializer
 {

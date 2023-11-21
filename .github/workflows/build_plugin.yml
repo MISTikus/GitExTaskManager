@@ -31,6 +31,6 @@ jobs:
 
     # - name: Push to `Nuget.org` nuget feed
     #   run: |
-    #     cd "src/GitExTaskManger/bin/Release"
+    #     cd "src/GitExtensions.TaskManger/bin/Release"
     #     # Set your nuget token in a `NUGET_PUSH_TOKEN` GitHub secrets. See https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
     #     dotnet nuget push *.nupkg -k ${{ secrets.NUGET_PUSH_TOKEN }} -s https://api.nuget.org/v3/index.json -n true

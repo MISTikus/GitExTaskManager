@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace GitExTaskManger.Extensions;
+namespace GitExtensions.TaskManger.Extensions;
 internal static class QueryExtensions
 {
     public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, bool>> predicate)

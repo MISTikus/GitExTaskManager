@@ -1,12 +1,12 @@
 # GitExtensions Plugin Template
 An example/empty repository for building a GitExtensions plugin that can be installed using [GitExtensions.PluginManager](https://github.com/gitextensions/gitextensions.pluginmanager).
 
-The package is going to be published on [NuGet.org](https://www.nuget.org/packages/GitExTaskManger) feed.
+The package is going to be published on [NuGet.org](https://www.nuget.org/packages/GitExtensions.TaskManger) feed.
 
 ## Files to keep an eye on
  - [Plugin.cs](src/GitExTaskManger/Plugin.cs)
- - [GitExTaskManger.csproj](src/GitExTaskManger/GitExTaskManger.csproj)
- - [GitExTaskManger.nuspec](src/GitExTaskManger/GitExTaskManger.nuspec)
+ - [GitExtensions.TaskManger.csproj](src/GitExTaskManger/GitExtensions.TaskManger.csproj)
+ - [GitExtensions.TaskManger.nuspec](src/GitExTaskManger/GitExtensions.TaskManger.nuspec)
  
 ### Nuspec
  - Place all content under lib folder. Custom nested folders are supported and path is preserved.

@@ -9,4 +9,4 @@ using System.Diagnostics.CodeAnalysis;
     "Minor Code Smell",
     "S2292:Trivial properties should be auto-implemented",
     Justification = "<Pending>", Scope = "namespaceanddescendants",
-    Target = "GitExTaskManger.Domain")]
+    Target = "GitExtensions.TaskManger.Domain")]

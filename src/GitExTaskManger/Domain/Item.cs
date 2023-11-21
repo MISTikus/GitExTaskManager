@@ -1,6 +1,6 @@
-﻿namespace GitExTaskManger.Domain;
+﻿namespace GitExtensions.TaskManger.Domain;
 
-internal abstract class Item
+internal abstract record Item
 {
     private string title;
     private string description;
@@ -17,8 +17,8 @@ internal abstract class Item
     public DateTime Created { get; init; }
     public string Title { get => this.title; init => this.title = value; }
     public string Description { get => this.description; init => this.description = value; }
-    public Dictionary<DateTime, string> Comments { get; }
-    public ItemState State { get; private set; } = ItemState.Created;
+    public Dictionary<DateTime, string> Comments { get; protected set; } // protected is a crutch for deserializer
+    public ItemState State { get; protected set; } = ItemState.Created;
 
     internal void ChangeTitle(string title)
     {

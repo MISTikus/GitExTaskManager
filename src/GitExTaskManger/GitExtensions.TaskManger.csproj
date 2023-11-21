@@ -27,8 +27,14 @@
   </ItemGroup>
   
   <PropertyGroup>
-    <GitExtensionsReferenceVersion>v4</GitExtensionsReferenceVersion>
+    <GitExtensionsReferenceVersion>v4.2</GitExtensionsReferenceVersion>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="13.7.1">
+      <GeneratePathProperty>True</GeneratePathProperty>
+    </PackageReference>
+  </ItemGroup>
 
   <!-- Reference to GitExtensions dlls. -->
   <ItemGroup>
@@ -45,7 +51,7 @@
     <Authors>MISTikus</Authors>
     <Company>TakeDareCom</Company>
     <Description>GitExtensions task manger plugin.</Description>
-    <PackageProjectUrl>https://github.com/MISTikus/GitExTaskManger</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/MISTikus/GitExtensions.TaskManger</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/MISTikus/GitExTaskManager/master/assets/TaskManager.png</PackageIconUrl>
     <PackageTags>GitExtensions;TaskManager</PackageTags>
   </PropertyGroup>
@@ -70,9 +76,10 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Message Text="Executing postbuild event provided by GitExtensions.Extensibility" />
+    <Message Text="Executing postbuild event provided by GitExtensions.Extensibility $(PkgYamlDotNet)" />
     <MakeDir Directories="$(GitExtensionsPluginsPath)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
+    <Copy SourceFiles="$(PkgYamlDotNet)\lib\net6.0\YamlDotNet.dll" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
     <Message Text="Completed postbuild event provided by GitExtensions.Extensibility" />
   </Target>
 

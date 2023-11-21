@@ -1,4 +1,4 @@
-﻿namespace GitExTaskManger.Services;
+﻿namespace GitExtensions.TaskManger.Services;
 internal class FileProvider : IFileProvider
 {
     private readonly string rootPath;
@@ -10,14 +10,29 @@ internal class FileProvider : IFileProvider
 
     public async Task CreateAsync(string fileName, string body, CancellationToken cancellation)
     {
+        cancellation.ThrowIfCancellationRequested();
+
         var path = Path.Combine(rootPath, fileName);
         if (!Directory.Exists(Path.GetDirectoryName(path)))
             Directory.CreateDirectory(Path.GetDirectoryName(path));
         await File.WriteAllTextAsync(path, body, cancellation);
     }
 
+    public Task DeleteAsync(string fileName, CancellationToken cancellation)
+    {
+        cancellation.ThrowIfCancellationRequested();
+
+        var path = Path.Combine(rootPath, fileName);
+        if (!Directory.Exists(Path.GetDirectoryName(path)))
+            return Task.CompletedTask;
+        File.Delete(path);
+        return Task.CompletedTask;
+    }
+
     public async Task<IEnumerable<string>> GetListAsync(string path, CancellationToken cancellation)
     {
+        cancellation.ThrowIfCancellationRequested();
+
         var info = new DirectoryInfo(Path.Combine(rootPath, path));
         if (!info.Exists)
             return Enumerable.Empty<string>();
@@ -33,5 +48,6 @@ internal class FileProvider : IFileProvider
 internal interface IFileProvider
 {
     Task CreateAsync(string fileName, string body, CancellationToken cancellation);
+    Task DeleteAsync(string fileName, CancellationToken cancellation);
     Task<IEnumerable<string>> GetListAsync(string path, CancellationToken cancellation);
 }

@@ -1,4 +1,4 @@
-﻿namespace GitExTaskManger.Controls;
+﻿namespace GitExtensions.TaskManger.Controls;
 
 partial class ToDoListForm
 {

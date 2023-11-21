@@ -1,15 +1,14 @@
-﻿using GitExTaskManger.Controls;
-using GitExTaskManger.Domain;
-using GitExTaskManger.Properties;
-using GitExTaskManger.Services;
-using GitExTaskManger.Utils;
+﻿using GitExtensions.TaskManger.Controls;
+using GitExtensions.TaskManger.Properties;
+using GitExtensions.TaskManger.Services;
+using GitExtensions.TaskManger.Utils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using System.ComponentModel.Composition;
 
-namespace GitExTaskManger
+namespace GitExtensions.TaskManger
 {
     [Export(typeof(IGitPlugin))]
     public class Plugin : GitPluginBase
@@ -37,9 +36,9 @@ namespace GitExTaskManger
                 if (mainMenu != null && FindMainMenuItem(gitUiCommands, mainMenu) == null)
                 {
                     var provider = new FileProvider(gitUiCommands.GitModule.WorkingDir);
-                    var serializer = new GtmSerializer(new());
+                    var serializer = new YmlSerializer();
 
-                    var manager = new TaskManger(provider, serializer);
+                    var manager = new Domain.TaskManger(provider, serializer, "yaml");
                     mainMenu.Items.Add(new TaskManagerMenuItem(manager));
                 }
             }

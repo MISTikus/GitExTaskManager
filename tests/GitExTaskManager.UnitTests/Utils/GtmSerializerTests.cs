@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using GitExTaskManger.Domain;
-using GitExTaskManger.Utils;
+using GitExtensions.TaskManger.Domain;
+using GitExtensions.TaskManger.Utils;
 
 namespace GitExTaskManager.UnitTests.Utils;
 
@@ -40,9 +40,9 @@ public class GtmSerializerTests
     public void Deserialize_Should_Restore_Serialized_Object()
     {
         // Arrange
-        //this.options.Converters.Add(typeof(Sample.SubSample), (
-        //    new Func<object, string>((o) => this.sut.Serialize((Sample.SubSample)o)),
-        //    (s) => new Sample.SubSample()));
+        this.options.Converters.Add(typeof(Sample.SubSample), (
+            new Func<object, string>((o) => this.sut.Serialize((Sample.SubSample)o)),
+            (s) => new Sample.SubSample()));
 
         var model = new Sample
         {
