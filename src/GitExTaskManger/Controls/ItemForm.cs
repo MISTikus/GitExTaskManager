@@ -26,7 +26,7 @@ internal partial class ItemForm : Form
     #region EventHandlers
     private void AddComment_Click(object sender, EventArgs e)
     {
-        this.item.Comments.Add(DateTime.Now, CommentBox.Text);
+        this.item.AddComment(DateTime.Now, CommentBox.Text);
         CommentsPanel.Controls.Add(CreateCommentControl(this.item.Comments.Last().Value, this.item.Comments.Last().Key));
         ApplyChanged();
         CommentBox.Text = "";

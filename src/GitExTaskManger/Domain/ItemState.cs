@@ -3,5 +3,5 @@ internal enum ItemState
 {
     Created,
     Resolved,
-    Changed
+    Saved
 }

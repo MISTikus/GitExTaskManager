@@ -29,173 +29,183 @@ partial class ToDoListForm
     private void InitializeComponent()
     {
         var listViewItem1 = new ListViewItem(new string[] { "Title", "Created" }, -1);
-        statusStrip1 = new StatusStrip();
-        StatusLabel = new ToolStripStatusLabel();
-        toolStripStatusLabel2 = new ToolStripStatusLabel();
-        toolStripStatusLabel1 = new ToolStripStatusLabel();
-        ChangeModeButton = new ToolStripSplitButton();
-        showResolvedToolStripMenuItem = new ToolStripMenuItem();
-        panel1 = new Panel();
-        ResolveButton = new Button();
-        RemoveButton = new Button();
-        EditButton = new Button();
-        AddButton = new Button();
-        ToDoList = new ListView();
-        columnHeader4 = new ColumnHeader();
-        columnHeader5 = new ColumnHeader();
-        statusStrip1.SuspendLayout();
-        panel1.SuspendLayout();
+        this.statusStrip1 = new StatusStrip();
+        this.StatusLabel = new ToolStripStatusLabel();
+        this.toolStripStatusLabel2 = new ToolStripStatusLabel();
+        this.toolStripStatusLabel1 = new ToolStripStatusLabel();
+        this.ChangeModeButton = new ToolStripSplitButton();
+        this.ShowResolvedMenuItem = new ToolStripMenuItem();
+        this.panel1 = new Panel();
+        this.ResolveButton = new Button();
+        this.RemoveButton = new Button();
+        this.EditButton = new Button();
+        this.AddButton = new Button();
+        this.ToDoList = new ListView();
+        this.columnHeader4 = new ColumnHeader();
+        this.columnHeader1 = new ColumnHeader();
+        this.columnHeader5 = new ColumnHeader();
+        this.statusStrip1.SuspendLayout();
+        this.panel1.SuspendLayout();
         SuspendLayout();
         // 
         // statusStrip1
         // 
-        statusStrip1.ImageScalingSize = new Size(24, 24);
-        statusStrip1.Items.AddRange(new ToolStripItem[] { StatusLabel, toolStripStatusLabel2, toolStripStatusLabel1, ChangeModeButton });
-        statusStrip1.Location = new Point(0, 733);
-        statusStrip1.Name = "statusStrip1";
-        statusStrip1.Size = new Size(1542, 32);
-        statusStrip1.TabIndex = 1;
-        statusStrip1.Text = "statusStrip1";
+        this.statusStrip1.ImageScalingSize = new Size(24, 24);
+        this.statusStrip1.Items.AddRange(new ToolStripItem[] { this.StatusLabel, this.toolStripStatusLabel2, this.toolStripStatusLabel1, this.ChangeModeButton });
+        this.statusStrip1.Location = new Point(0, 733);
+        this.statusStrip1.Name = "statusStrip1";
+        this.statusStrip1.Size = new Size(1542, 32);
+        this.statusStrip1.TabIndex = 1;
+        this.statusStrip1.Text = "statusStrip1";
         // 
         // StatusLabel
         // 
-        StatusLabel.Name = "StatusLabel";
-        StatusLabel.Size = new Size(179, 25);
-        StatusLabel.Text = "toolStripStatusLabel1";
+        this.StatusLabel.Name = "StatusLabel";
+        this.StatusLabel.Size = new Size(179, 25);
+        this.StatusLabel.Text = "toolStripStatusLabel1";
         // 
         // toolStripStatusLabel2
         // 
-        toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-        toolStripStatusLabel2.Size = new Size(1226, 25);
-        toolStripStatusLabel2.Spring = true;
+        this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+        this.toolStripStatusLabel2.Size = new Size(1226, 25);
+        this.toolStripStatusLabel2.Spring = true;
         // 
         // toolStripStatusLabel1
         // 
-        toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-        toolStripStatusLabel1.Size = new Size(0, 25);
+        this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+        this.toolStripStatusLabel1.Size = new Size(0, 25);
         // 
         // ChangeModeButton
         // 
-        ChangeModeButton.AutoToolTip = false;
-        ChangeModeButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-        ChangeModeButton.DropDownItems.AddRange(new ToolStripItem[] { showResolvedToolStripMenuItem });
-        ChangeModeButton.ImageTransparentColor = Color.Magenta;
-        ChangeModeButton.Name = "ChangeModeButton";
-        ChangeModeButton.Size = new Size(122, 29);
-        ChangeModeButton.Text = "View mode";
-        ChangeModeButton.TextImageRelation = TextImageRelation.TextAboveImage;
+        this.ChangeModeButton.AutoToolTip = false;
+        this.ChangeModeButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        this.ChangeModeButton.DropDownItems.AddRange(new ToolStripItem[] { this.ShowResolvedMenuItem });
+        this.ChangeModeButton.ImageTransparentColor = Color.Magenta;
+        this.ChangeModeButton.Name = "ChangeModeButton";
+        this.ChangeModeButton.Size = new Size(122, 29);
+        this.ChangeModeButton.Text = "View mode";
+        this.ChangeModeButton.TextImageRelation = TextImageRelation.TextAboveImage;
+        this.ChangeModeButton.ButtonClick += ChangeModeButton_ButtonClick;
         // 
-        // showResolvedToolStripMenuItem
+        // ShowResolvedMenuItem
         // 
-        showResolvedToolStripMenuItem.Name = "showResolvedToolStripMenuItem";
-        showResolvedToolStripMenuItem.Size = new Size(229, 34);
-        showResolvedToolStripMenuItem.Text = "ShowResolved";
-        showResolvedToolStripMenuItem.Click += ShowResolved_Click;
+        this.ShowResolvedMenuItem.Name = "ShowResolvedMenuItem";
+        this.ShowResolvedMenuItem.Size = new Size(278, 34);
+        this.ShowResolvedMenuItem.Text = "Show resolved items";
+        this.ShowResolvedMenuItem.DropDownClosed += ShowResolvedMenuItem_DropDownClosed;
+        this.ShowResolvedMenuItem.DropDownOpened += ShowResolvedMenuItem_DropDownOpened;
+        this.ShowResolvedMenuItem.Click += ShowResolved_Click;
         // 
         // panel1
         // 
-        panel1.Controls.Add(ResolveButton);
-        panel1.Controls.Add(RemoveButton);
-        panel1.Controls.Add(EditButton);
-        panel1.Controls.Add(AddButton);
-        panel1.Dock = DockStyle.Right;
-        panel1.Location = new Point(1441, 0);
-        panel1.Name = "panel1";
-        panel1.Size = new Size(101, 733);
-        panel1.TabIndex = 3;
+        this.panel1.Controls.Add(this.ResolveButton);
+        this.panel1.Controls.Add(this.RemoveButton);
+        this.panel1.Controls.Add(this.EditButton);
+        this.panel1.Controls.Add(this.AddButton);
+        this.panel1.Dock = DockStyle.Right;
+        this.panel1.Location = new Point(1441, 0);
+        this.panel1.Name = "panel1";
+        this.panel1.Size = new Size(101, 733);
+        this.panel1.TabIndex = 3;
         // 
         // ResolveButton
         // 
-        ResolveButton.Dock = DockStyle.Top;
-        ResolveButton.Enabled = false;
-        ResolveButton.Location = new Point(0, 190);
-        ResolveButton.Name = "ResolveButton";
-        ResolveButton.Size = new Size(101, 95);
-        ResolveButton.TabIndex = 3;
-        ResolveButton.Text = "Resolve";
-        ResolveButton.TextAlign = ContentAlignment.BottomCenter;
-        ResolveButton.UseVisualStyleBackColor = true;
-        ResolveButton.Click += ResolveButton_Click;
+        this.ResolveButton.Dock = DockStyle.Top;
+        this.ResolveButton.Enabled = false;
+        this.ResolveButton.Location = new Point(0, 190);
+        this.ResolveButton.Name = "ResolveButton";
+        this.ResolveButton.Size = new Size(101, 95);
+        this.ResolveButton.TabIndex = 3;
+        this.ResolveButton.Text = "Resolve";
+        this.ResolveButton.TextAlign = ContentAlignment.BottomCenter;
+        this.ResolveButton.UseVisualStyleBackColor = true;
+        this.ResolveButton.Click += ResolveButton_Click;
         // 
         // RemoveButton
         // 
-        RemoveButton.Dock = DockStyle.Bottom;
-        RemoveButton.Enabled = false;
-        RemoveButton.Location = new Point(0, 638);
-        RemoveButton.Name = "RemoveButton";
-        RemoveButton.Size = new Size(101, 95);
-        RemoveButton.TabIndex = 2;
-        RemoveButton.Text = "Remove";
-        RemoveButton.TextAlign = ContentAlignment.BottomCenter;
-        RemoveButton.UseVisualStyleBackColor = true;
-        RemoveButton.Click += RemoveButton_Click;
+        this.RemoveButton.Dock = DockStyle.Bottom;
+        this.RemoveButton.Enabled = false;
+        this.RemoveButton.Location = new Point(0, 638);
+        this.RemoveButton.Name = "RemoveButton";
+        this.RemoveButton.Size = new Size(101, 95);
+        this.RemoveButton.TabIndex = 2;
+        this.RemoveButton.Text = "Remove";
+        this.RemoveButton.TextAlign = ContentAlignment.BottomCenter;
+        this.RemoveButton.UseVisualStyleBackColor = true;
+        this.RemoveButton.Click += RemoveButton_Click;
         // 
         // EditButton
         // 
-        EditButton.Dock = DockStyle.Top;
-        EditButton.Enabled = false;
-        EditButton.Location = new Point(0, 95);
-        EditButton.Name = "EditButton";
-        EditButton.Size = new Size(101, 95);
-        EditButton.TabIndex = 1;
-        EditButton.Text = "Edit";
-        EditButton.TextAlign = ContentAlignment.BottomCenter;
-        EditButton.UseVisualStyleBackColor = true;
-        EditButton.Click += EditButton_Click;
+        this.EditButton.Dock = DockStyle.Top;
+        this.EditButton.Enabled = false;
+        this.EditButton.Location = new Point(0, 95);
+        this.EditButton.Name = "EditButton";
+        this.EditButton.Size = new Size(101, 95);
+        this.EditButton.TabIndex = 1;
+        this.EditButton.Text = "Edit";
+        this.EditButton.TextAlign = ContentAlignment.BottomCenter;
+        this.EditButton.UseVisualStyleBackColor = true;
+        this.EditButton.Click += EditButton_Click;
         // 
         // AddButton
         // 
-        AddButton.Dock = DockStyle.Top;
-        AddButton.Location = new Point(0, 0);
-        AddButton.Name = "AddButton";
-        AddButton.Size = new Size(101, 95);
-        AddButton.TabIndex = 0;
-        AddButton.Text = "Add";
-        AddButton.TextAlign = ContentAlignment.BottomCenter;
-        AddButton.UseVisualStyleBackColor = true;
-        AddButton.Click += AddButton_Click;
+        this.AddButton.Dock = DockStyle.Top;
+        this.AddButton.Location = new Point(0, 0);
+        this.AddButton.Name = "AddButton";
+        this.AddButton.Size = new Size(101, 95);
+        this.AddButton.TabIndex = 0;
+        this.AddButton.Text = "Add";
+        this.AddButton.TextAlign = ContentAlignment.BottomCenter;
+        this.AddButton.UseVisualStyleBackColor = true;
+        this.AddButton.Click += AddButton_Click;
         // 
         // ToDoList
         // 
-        ToDoList.BackColor = SystemColors.Menu;
-        ToDoList.Columns.AddRange(new ColumnHeader[] { columnHeader4, columnHeader5 });
-        ToDoList.Dock = DockStyle.Fill;
-        ToDoList.FullRowSelect = true;
-        ToDoList.GridLines = true;
-        ToDoList.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-        ToDoList.Items.AddRange(new ListViewItem[] { listViewItem1 });
-        ToDoList.Location = new Point(0, 0);
-        ToDoList.MultiSelect = false;
-        ToDoList.Name = "ToDoList";
-        ToDoList.ShowItemToolTips = true;
-        ToDoList.Size = new Size(1441, 733);
-        ToDoList.TabIndex = 4;
-        ToDoList.UseCompatibleStateImageBehavior = false;
-        ToDoList.View = View.Details;
-        ToDoList.SelectedIndexChanged += ToDoList_SelectedIndexChanged;
-        ToDoList.DoubleClick += ToDoList_DoubleClick;
+        this.ToDoList.BackColor = SystemColors.Menu;
+        this.ToDoList.Columns.AddRange(new ColumnHeader[] { this.columnHeader4, this.columnHeader1, this.columnHeader5 });
+        this.ToDoList.Dock = DockStyle.Fill;
+        this.ToDoList.FullRowSelect = true;
+        this.ToDoList.GridLines = true;
+        this.ToDoList.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+        this.ToDoList.Items.AddRange(new ListViewItem[] { listViewItem1 });
+        this.ToDoList.Location = new Point(0, 0);
+        this.ToDoList.MultiSelect = false;
+        this.ToDoList.Name = "ToDoList";
+        this.ToDoList.ShowItemToolTips = true;
+        this.ToDoList.Size = new Size(1441, 733);
+        this.ToDoList.TabIndex = 4;
+        this.ToDoList.UseCompatibleStateImageBehavior = false;
+        this.ToDoList.View = View.Details;
+        this.ToDoList.SelectedIndexChanged += ToDoList_SelectedIndexChanged;
+        this.ToDoList.DoubleClick += ToDoList_DoubleClick;
         // 
         // columnHeader4
         // 
-        columnHeader4.Text = "Title";
+        this.columnHeader4.Text = "Title";
+        // 
+        // columnHeader1
+        // 
+        this.columnHeader1.DisplayIndex = 2;
+        this.columnHeader1.Text = "State";
         // 
         // columnHeader5
         // 
-        columnHeader5.Text = "Created";
+        this.columnHeader5.DisplayIndex = 1;
+        this.columnHeader5.Text = "Created";
         // 
         // ToDoListForm
         // 
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(1542, 765);
-        Controls.Add(ToDoList);
-        Controls.Add(panel1);
-        Controls.Add(statusStrip1);
+        Controls.Add(this.ToDoList);
+        Controls.Add(this.panel1);
+        Controls.Add(this.statusStrip1);
         Name = "ToDoListForm";
         Text = "ToDoListForm";
-        statusStrip1.ResumeLayout(false);
-        statusStrip1.PerformLayout();
-        panel1.ResumeLayout(false);
+        this.statusStrip1.ResumeLayout(false);
+        this.statusStrip1.PerformLayout();
+        this.panel1.ResumeLayout(false);
         ResumeLayout(false);
         PerformLayout();
     }
@@ -211,9 +221,10 @@ partial class ToDoListForm
     private Button ResolveButton;
     private Button RemoveButton;
     private ToolStripSplitButton ChangeModeButton;
-    private ToolStripMenuItem showResolvedToolStripMenuItem;
+    private ToolStripMenuItem ShowResolvedMenuItem;
     private ToolStripStatusLabel toolStripStatusLabel2;
     private ToolStripStatusLabel toolStripStatusLabel1;
     private ColumnHeader columnHeader4;
     private ColumnHeader columnHeader5;
+    private ColumnHeader columnHeader1;
 }

@@ -7,6 +7,7 @@ internal partial class ToDoListForm : Form
     private readonly ITaskManger taskManger;
 
     private bool showResolved = false;
+    private bool viewModeOpened = false;
     private int Selected => ToDoList.SelectedIndices[0];
 
     public ToDoListForm() => InitializeComponent();
@@ -23,6 +24,11 @@ internal partial class ToDoListForm : Form
         ToDoList.Items.Clear();
 
         ToDoList.Columns.AddRange(GetColumnsByType());
+
+        this.taskManger.ItemAdded += (s, item) => AssignItems();
+        this.taskManger.ItemRemoved += (s, item) => AssignItems();
+        this.taskManger.ItemResolved += (s, item) => AssignItems();
+        this.taskManger.ItemChanged += (s, item) => AssignItems();
     }
 
     #region EventHandlers
@@ -36,7 +42,7 @@ internal partial class ToDoListForm : Form
         });
         var result = addForm.ShowDialog();
         if (result == DialogResult.OK)
-            this.taskManger.AddAsync(addForm.Item).ConfigureAwait(false);
+            this.taskManger.SaveAsync(addForm.Item).ConfigureAwait(false);
     }
 
     private void EditButton_Click(object sender, EventArgs e)
@@ -44,7 +50,7 @@ internal partial class ToDoListForm : Form
         var addForm = new ItemForm(FormActionType.Edit, GetSelectedItemByType());
         var result = addForm.ShowDialog();
         if (result == DialogResult.OK)
-            this.taskManger.AddAsync(addForm.Item).ConfigureAwait(false);
+            this.taskManger.SaveAsync(addForm.Item).ConfigureAwait(false);
     }
 
     private void ResolveButton_Click(object sender, EventArgs e)
@@ -62,7 +68,11 @@ internal partial class ToDoListForm : Form
     }
 
     private void ShowResolved_Click(object sender, EventArgs e)
-        => this.showResolved = !this.showResolved;
+    {
+        this.showResolved = !this.showResolved;
+        ShowResolvedMenuItem.Checked = this.showResolved;
+        AssignItems();
+    }
 
     private void ToDoList_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -79,6 +89,20 @@ internal partial class ToDoListForm : Form
             return;
         EditButton_Click(sender, e);
     }
+
+    private void ChangeModeButton_ButtonClick(object sender, EventArgs e)
+    {
+        if (!viewModeOpened)
+            ChangeModeButton.ShowDropDown();
+        else
+            ChangeModeButton.HideDropDown();
+
+        viewModeOpened = !viewModeOpened;
+    }
+
+    private void ShowResolvedMenuItem_DropDownClosed(object sender, EventArgs e) => viewModeOpened = false;
+
+    private void ShowResolvedMenuItem_DropDownOpened(object sender, EventArgs e) => viewModeOpened = true;
     #endregion EventHandlers
 
     #region Private methods
@@ -90,9 +114,14 @@ internal partial class ToDoListForm : Form
             ItemType.Backlog => taskManger.GetBacklogs(showResolved),
             _ => throw new NotImplementedException()
         };
-        var viewItems = items.Select(x => new ListViewItem(new string[] { x.Title, x.Created.ToString("u") })
+        var viewItems = items.Select(x => new ListViewItem(new string[] { x.Title, x.State.ToString(), x.Created.ToString("u") })
         {
-            ToolTipText = x.Description
+            ToolTipText = x.Description,
+            BackColor = x.State switch
+            {
+                ItemState.Resolved => Color.Plum,
+                _ => BackColor,
+            },
         })
         .ToArray();
         ToDoList.Items.Clear();
@@ -103,7 +132,8 @@ internal partial class ToDoListForm : Form
     {
         _ => new ColumnHeader[]
         {
-            new() { Text = "Title", Width = CalculateWidth(80)-10 },
+            new() { Text = "Title", Width = CalculateWidth(70)-10 },
+            new() { Text = "State", Width = CalculateWidth(10) },
             new() { Text = "Created", Width = CalculateWidth(20) }
         },
     };

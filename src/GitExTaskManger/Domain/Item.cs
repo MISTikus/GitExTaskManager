@@ -2,6 +2,7 @@
 
 internal abstract record Item
 {
+    private bool isChanged;
     private string title;
     private string description;
 
@@ -20,12 +21,15 @@ internal abstract record Item
     public Dictionary<DateTime, string> Comments { get; protected set; } // protected is a crutch for deserializer
     public ItemState State { get; protected set; } = ItemState.Created;
 
+    internal bool IsChanged() => this.isChanged;
+
     internal void ChangeTitle(string title)
     {
         if (Title == title)
             return;
         this.title = title;
-        State = ItemState.Changed;
+        if (State != ItemState.Created)
+            isChanged = true;
     }
 
     internal void ChangeDescription(string description)
@@ -33,7 +37,15 @@ internal abstract record Item
         if (Description == description)
             return;
         this.description = description;
-        State = ItemState.Changed;
+        if (State != ItemState.Created)
+            isChanged = true;
+    }
+
+    internal void AddComment(DateTime dateStamp, string text)
+    {
+        Comments.Add(dateStamp, text);
+        if (State != ItemState.Created)
+            isChanged = true;
     }
 
     internal void Resolve()
@@ -41,5 +53,12 @@ internal abstract record Item
         if (State == ItemState.Resolved)
             return;
         State = ItemState.Resolved;
+    }
+
+    internal void Saved()
+    {
+        isChanged = false;
+        if (State != ItemState.Saved)
+            State = ItemState.Saved;
     }
 }

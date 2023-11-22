@@ -37,7 +37,7 @@ public class TaskManagerTests
             .Returns(body);
 
         // Act
-        await this.sut.AddAsync(model);
+        await this.sut.SaveAsync(model);
 
         // Assert
         this.serializer.Verify(x => x.Serialize<Item>(model), Times.Once);
