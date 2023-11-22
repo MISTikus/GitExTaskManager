@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>0.1.1-alpha</VersionPrefix>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <UseWindowsForms>true</UseWindowsForms>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>11</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -50,8 +51,8 @@
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
     <Authors>MISTikus</Authors>
     <Company>TakeDareCom</Company>
-    <Description>GitExtensions task manger plugin.</Description>
-    <PackageProjectUrl>https://github.com/MISTikus/GitExtensions.TaskManger</PackageProjectUrl>
+    <Description>GitExtensions local task manger plugin.</Description>
+    <PackageProjectUrl>https://github.com/MISTikus/GitExTaskManger</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/MISTikus/GitExTaskManager/master/assets/TaskManager.png</PackageIconUrl>
     <PackageTags>GitExtensions;TaskManager</PackageTags>
   </PropertyGroup>
@@ -88,6 +89,7 @@
     <MakeDir Directories="$(_GitExtensionsDownloadPath)" />
     <Error Condition="!Exists($(GitExtensionsExecutablePath)) and !Exists($(_GitExtensionsDownloadScriptPath))" Text="Path to Git Extensions portable download script is wrong. Current value '$(_GitExtensionsDownloadScriptPath)'." />
     <Exec Condition="!Exists($(GitExtensionsExecutablePath))" Command="powershell.exe -ExecutionPolicy Unrestricted $(_GitExtensionsDownloadScriptPath) -ExtractRootPath $(_GitExtensionsDownloadPath) -Version $(GitExtensionsReferenceVersion) -Source $(GitExtensionsReferenceSource)" />
+    <Copy Condition="!Exists('$(TargetDir)YamlDotNet.dll')" SourceFiles="$(PkgYamlDotNet)\lib\net6.0\YamlDotNet.dll" DestinationFolder="$(TargetDir)" />
     <Message Text="Completed prebuild event provided by GitExtensions.Extensibility" />
   </Target>
 

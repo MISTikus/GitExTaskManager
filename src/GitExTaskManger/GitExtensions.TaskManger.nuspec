@@ -10,10 +10,12 @@
     <tags>$tags$</tags>
     <dependencies>
       <dependency id="GitExtensions.Extensibility" version="[0.3.0, 0.4.0)" />
+      <dependency id="YamlDotNet" version="13.7.1" />
     </dependencies>
   </metadata>
   <files>
     <file src="$targetDir$$id$.dll" target="/lib" />
     <file src="$targetDir$$id$.pdb" target="/lib" />
+    <file src="$targetDir$YamlDotNet.dll" target="/lib" />
   </files>
 </package>
