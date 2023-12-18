@@ -16,6 +16,7 @@ internal partial class ItemForm : Form
         this.actionType = actionType;
         this.item = item;
 
+        Text = item.Type.ToString();
         TitleBox.Text = item.Title;
         DescriptionBox.Text = item.Description;
 

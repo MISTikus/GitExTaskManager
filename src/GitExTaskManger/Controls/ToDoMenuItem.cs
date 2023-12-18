@@ -1,6 +1,5 @@
 ﻿using GitExtensions.TaskManger.Domain;
 using GitExtensions.TaskManger.Utils;
-using System.Reflection;
 
 namespace GitExtensions.TaskManger.Controls;
 
@@ -13,17 +12,7 @@ internal class ToDoMenuItem : ToolStripMenuItem
     {
         this.type = type;
         this.taskManger = taskManger;
-        Text = "&" + GetPluralName();
-    }
-
-    private string GetPluralName()
-    {
-        var enumType = typeof(ItemType);
-        var typeName = this.type.ToString();
-        var memberInfos = enumType.GetMember(typeName);
-        var enumValueMemberInfo = memberInfos.Single(m => m.DeclaringType == enumType);
-        var valueAttributes = enumValueMemberInfo.GetCustomAttribute<PluralAttribute>(true);
-        return valueAttributes?.PluralName ?? typeName;
+        Text = "&" + this.type.GetPluralName();
     }
 
     protected override void OnClick(EventArgs e)
