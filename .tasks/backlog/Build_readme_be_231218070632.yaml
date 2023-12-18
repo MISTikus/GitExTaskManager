@@ -1,0 +1,13 @@
+type: Backlog
+created: 2023-12-18T19:06:32.6216299+02:00
+title: Build readme before commit
+description: >-
+  Add before commit hook to inject history to readme.md
+
+
+  Settings:
+   - Enabled/Disabled (default: disabled)
+   - FileName to inject (default: readme.md)
+   - Header to inject (default: "## HISTORY")
+comments: {}
+state: Saved
