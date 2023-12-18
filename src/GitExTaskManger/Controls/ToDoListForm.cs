@@ -1,4 +1,5 @@
 ﻿using GitExtensions.TaskManger.Domain;
+using GitExtensions.TaskManger.Utils;
 
 namespace GitExtensions.TaskManger.Controls;
 internal partial class ToDoListForm : Form
@@ -14,6 +15,7 @@ internal partial class ToDoListForm : Form
     public ToDoListForm(ItemType type, ITaskManger taskManger) : this()
     {
         this.type = type;
+        Text = type.GetPluralName();
         this.taskManger = taskManger;
         taskManger.ReloadAsync()
             .ContinueWith(t => AssignItems())
