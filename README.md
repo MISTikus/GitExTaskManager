@@ -3,7 +3,7 @@ Simple WinForms local task management tool.
 
 Based on An example/empty repository for building a GitExtensions plugin that can be installed using [GitExtensions.PluginManager](https://github.com/gitextensions/gitextensions.pluginmanager).
 
-Published on [NuGet.org](https://www.nuget.org/packages/GitExtensions.TaskManger) feed.
+Published on [NuGet.org](https://www.nuget.org/packages/GitExtensions.TaskManager) feed.
 ![Nuget](https://img.shields.io/nuget/v/GitExtensions.TaskManager)
 
 ---
