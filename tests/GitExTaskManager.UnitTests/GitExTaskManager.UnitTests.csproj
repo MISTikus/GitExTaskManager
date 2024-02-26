@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\GitExTaskManger\GitExtensions.TaskManger.csproj" />
+    <ProjectReference Include="..\..\src\GitExTaskManager\GitExtensions.TaskManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>

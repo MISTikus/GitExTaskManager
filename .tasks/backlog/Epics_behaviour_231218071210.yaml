@@ -5,5 +5,17 @@ description: >-
   Add opportunity to organize items with epics
 
   Store as folders
-comments: {}
+comments:
+  2023-12-21T20:58:44.8914133+02:00: >-
+    How to show in grid?
+
+    Maybe grouping?
+
+    How to sort groups?
+  2024-02-26T22:32:40.8796379+02:00: >-
+    Having issues:
+
+    - epic could not be saved without child item
+
+    - epic name not changes when saved before adding items
 state: Saved

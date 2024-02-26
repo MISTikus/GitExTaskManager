@@ -1,4 +1,4 @@
-using GitExtensions.TaskManger.Services;
+using GitExtensions.TaskManager.Services;
 
 namespace GitExTaskManager.UnitTests.Services;
 
@@ -8,7 +8,7 @@ public class FileProviderTests
 
     public FileProviderTests()
     {
-        this.sut = new FileProvider("\\Some");
+        this.sut = new FileProvider("\\Some", "file");
     }
 
     [Fact]
