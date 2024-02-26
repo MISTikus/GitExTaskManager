@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <VersionPrefix>0.1.1-alpha</VersionPrefix>
+    <VersionPrefix>0.2.1-alpha</VersionPrefix>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>11</LangVersion>
@@ -10,9 +10,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   
-  <PropertyGroup>
-  </PropertyGroup>
-
   <PropertyGroup>
     <_GitExtensionsDownloadPath>$([System.IO.Path]::Combine('$(ProjectDir)', '$(GitExtensionsDownloadPath)'))</_GitExtensionsDownloadPath>
     <_GitExtensionsDownloadScriptPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'Download-GitExtensions.ps1'))</_GitExtensionsDownloadScriptPath>
@@ -46,14 +43,16 @@
     <Reference Include="System.ComponentModel.Composition" HintPath="$(GitExtensionsDownloadPath)\System.ComponentModel.Composition.dll" />
   </ItemGroup>
 
-  <!-- Pack as .nupkg with dependency on GitExtensions.Extensibility -->
+  <!-- Pack as .nupkg with dependency -->
   <PropertyGroup>
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
     <Authors>MISTikus</Authors>
     <Company>TakeDareCom</Company>
     <Description>GitExtensions local task manager plugin.</Description>
     <PackageProjectUrl>https://github.com/MISTikus/GitExTaskManager</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/MISTikus/GitExTaskManager/master/assets/TaskManager.png</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>..\..\..\..\..\README.md</PackageReadmeFile>
+    <PackageIcon>..\..\..\..\..\assets\TaskManager.png</PackageIcon>
     <PackageTags>GitExtensions;TaskManager</PackageTags>
   </PropertyGroup>
   <Target Name="SetPackageProperties" BeforeTargets="GenerateNuspec">
@@ -64,11 +63,12 @@
         configuration=$(Configuration);
         tags=$(PackageTags.Replace(';',' '));
         projectUrl=$(PackageProjectUrl);
-        iconUrl=$(PackageIconUrl);
         repositoryUrl=$(RepositoryUrl);
         repositoryType=$(RepositoryType);
         repositoryCommit=$(RepositoryCommit);
         author=$(Authors);
+        icon=$(PackageIcon);
+        readme=$(PackageReadmeFile);
         copyright=$(Copyright);
         description=$(Description);
         targetDir=$(TargetDir);
@@ -77,11 +77,11 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Message Text="Executing postbuild event provided by GitExtensions.Extensibility $(PkgYamlDotNet)" />
+    <Message Text="Executing postbuild event provided $(PkgYamlDotNet)" />
     <MakeDir Directories="$(GitExtensionsPluginsPath)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
     <Copy SourceFiles="$(PkgYamlDotNet)\lib\net6.0\YamlDotNet.dll" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
-    <Message Text="Completed postbuild event provided by GitExtensions.Extensibility" />
+    <Message Text="Completed postbuild event provided" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="$(BuildDependsOn)">

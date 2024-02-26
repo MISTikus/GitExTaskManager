@@ -6,7 +6,9 @@
     <authors>$author$</authors>
     <description>$description$</description>
     <projectUrl>$projectUrl$</projectUrl>
-    <iconUrl>$iconUrl$</iconUrl>
+    <icon>images\TaskManager.png</icon>
+    <readme>docs\README.md</readme>
+    <license type="expression">MIT</license>
     <tags>$tags$</tags>
     <dependencies>
       <dependency id="GitExtensions.Extensibility" version="[0.3.0, 0.4.0)" />
@@ -17,5 +19,7 @@
     <file src="$targetDir$$id$.dll" target="/lib" />
     <file src="$targetDir$$id$.pdb" target="/lib" />
     <file src="$targetDir$YamlDotNet.dll" target="/lib" />
+    <file src="$targetDir$$icon$" target="images\" />
+    <file src="$targetDir$$readme$" target="docs\" />
   </files>
 </package>
