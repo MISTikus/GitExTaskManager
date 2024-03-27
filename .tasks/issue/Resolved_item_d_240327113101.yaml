@@ -1,0 +1,18 @@
+type: Issue
+created: 2024-03-27T23:31:01.0202555+02:00
+title: Resolved item duplication
+description: If try to modify resolved item app duplicates it.
+comments:
+  2024-03-27T23:32:37.5387522+02:00: >-
+    Steps:
+
+    1. Create new backlog item
+
+    2. Resolve it
+
+    3. Open resolved item
+
+    4. Write some comment
+
+    5. Save
+state: Saved
