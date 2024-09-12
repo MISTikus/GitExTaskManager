@@ -1,11 +1,11 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Settings;
 using System.Collections;
 
 namespace GitExtensions.TaskManager
 {
     internal class PluginSettings : IEnumerable<ISetting>
     {
-        private readonly ISettingsSource source;
+        private readonly SettingsSource source;
 
         /// <summary>
         /// Gets a property holding <see cref="UseEpics"/> property.
@@ -18,7 +18,7 @@ namespace GitExtensions.TaskManager
         /// </summary>
         public bool UseEpics => source.GetBool(UseEpicsProperty.Name, UseEpicsProperty.DefaultValue);
 
-        public PluginSettings(ISettingsSource source) => this.source = source;
+        public PluginSettings(SettingsSource source) => this.source = source;
 
         #region IEnumerable<ISetting>
 

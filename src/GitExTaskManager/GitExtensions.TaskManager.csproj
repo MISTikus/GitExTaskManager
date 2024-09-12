@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <VersionPrefix>0.2.1-alpha</VersionPrefix>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <VersionPrefix>0.3.0-alpha</VersionPrefix>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>11</LangVersion>
@@ -25,11 +25,11 @@
   </ItemGroup>
   
   <PropertyGroup>
-    <GitExtensionsReferenceVersion>v4.2</GitExtensionsReferenceVersion>
+    <GitExtensionsReferenceVersion>v5.0</GitExtensionsReferenceVersion>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="YamlDotNet" Version="13.7.1">
+    <PackageReference Include="YamlDotNet" Version="16.1.0">
       <GeneratePathProperty>True</GeneratePathProperty>
     </PackageReference>
   </ItemGroup>
@@ -38,6 +38,7 @@
   <ItemGroup>
     <Reference Include="GitExtUtils" HintPath="$(GitExtensionsDownloadPath)\GitExtUtils.dll" />
     <Reference Include="GitUI" HintPath="$(GitExtensionsDownloadPath)\GitUI.dll" />
+    <Reference Include="GitExtensions.Extensibility" HintPath="$(GitExtensionsDownloadPath)\GitExtensions.Extensibility.dll" />
     <Reference Include="GitUIPluginInterfaces" HintPath="$(GitExtensionsDownloadPath)\GitUIPluginInterfaces.dll" />
     <Reference Include="ResourceManager" HintPath="$(GitExtensionsDownloadPath)\ResourceManager.dll" />
     <Reference Include="System.ComponentModel.Composition" HintPath="$(GitExtensionsDownloadPath)\System.ComponentModel.Composition.dll" />
@@ -80,7 +81,7 @@
     <Message Text="Executing postbuild event provided $(PkgYamlDotNet)" />
     <MakeDir Directories="$(GitExtensionsPluginsPath)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
-    <Copy SourceFiles="$(PkgYamlDotNet)\lib\net6.0\YamlDotNet.dll" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
+    <Copy SourceFiles="$(PkgYamlDotNet)\lib\net8.0\YamlDotNet.dll" DestinationFolder="$([System.IO.Path]::Combine('$(GitExtensionsPluginsPath)', '$(ProjectName)'))" />
     <Message Text="Completed postbuild event provided" />
   </Target>
 
@@ -89,7 +90,7 @@
     <MakeDir Directories="$(_GitExtensionsDownloadPath)" />
     <Error Condition="!Exists($(GitExtensionsExecutablePath)) and !Exists($(_GitExtensionsDownloadScriptPath))" Text="Path to Git Extensions portable download script is wrong. Current value '$(_GitExtensionsDownloadScriptPath)'." />
     <Exec Condition="!Exists($(GitExtensionsExecutablePath))" Command="powershell.exe -ExecutionPolicy Unrestricted $(_GitExtensionsDownloadScriptPath) -ExtractRootPath $(_GitExtensionsDownloadPath) -Version $(GitExtensionsReferenceVersion) -Source $(GitExtensionsReferenceSource)" />
-    <Copy Condition="!Exists('$(TargetDir)YamlDotNet.dll')" SourceFiles="$(PkgYamlDotNet)\lib\net6.0\YamlDotNet.dll" DestinationFolder="$(TargetDir)" />
+    <Copy Condition="!Exists('$(TargetDir)YamlDotNet.dll')" SourceFiles="$(PkgYamlDotNet)\lib\net8.0\YamlDotNet.dll" DestinationFolder="$(TargetDir)" />
     <Message Text="Completed prebuild event provided by GitExtensions.Extensibility" />
   </Target>
 
