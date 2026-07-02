@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <GitExtensionsDownloadPath Condition="$(GitExtensionsDownloadPath) == ''">..\..\..\gitextensions.shared</GitExtensionsDownloadPath>
+    <GitExtensionsDownloadPath Condition="$(GitExtensionsDownloadPath) == ''">..\..\gitextensions.shared</GitExtensionsDownloadPath>
     <!-- path is relative to $(ProjectDir) -->
     <GitExtensionsReferenceVersion Condition="$(GitExtensionsReferenceVersion) == ''">latest</GitExtensionsReferenceVersion>
     <!-- 'latest' or 'v3.1' (= tag from GitHub releases) or 'v3.1.0.5877' (= build number from AppVeyor)-->

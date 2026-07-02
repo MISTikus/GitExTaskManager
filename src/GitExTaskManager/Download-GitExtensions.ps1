@@ -1,10 +1,12 @@
 param(
     [Parameter(Mandatory=$true)]
-    [string] $ExtractRootPath, 
+    [string] $ExtractRootPath,
     [Parameter(Mandatory=$true)]
-    [string] $Version, 
+    [string] $Version,
     [ValidateSet('GitHub','AppVeyor', ignorecase=$False)]
-    [string] $Source = "GitHub"
+    [string] $Source = "GitHub",
+    [ValidateSet('x64','arm64', ignorecase=$False)]
+    [string] $Architecture = "x64"
 )
 
 $LatestVersionName = "latest";
@@ -28,46 +30,92 @@ function Test-LocalCopy
     return $false;
 }
 
-function Find-ArchiveUrl 
+function Find-ArchiveUrl
 {
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [string] $Version,
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateSet('GitHub','AppVeyor', ignorecase=$False)]
-        [string] $Source
+        [string] $Source,
+        [Parameter(Mandatory=$true, Position=2)]
+        [ValidateSet('x64','arm64', ignorecase=$False)]
+        [string] $Architecture
     )
-    
-    Write-Host "Searching for Git Extensions release '$Version' on '$Source'.";
+
+    Write-Host "Searching for Git Extensions release '$Version' on '$Source' ($Architecture).";
     if ($Source -eq "GitHub")
     {
-        return Find-ArchiveUrlFromGitHub -Version $Version;
+        return Find-ArchiveUrlFromGitHub -Version $Version -Architecture $Architecture;
     }
-    
+
     if ($Source -eq "AppVeyor")
     {
-        return Find-ArchiveUrlFromAppVeyor -Version $Version;
+        return Find-ArchiveUrlFromAppVeyor -Version $Version -Architecture $Architecture;
     }
 
     throw "Unable to find download URL for 'Git Extensions $Version'";
 }
 
-function Find-ArchiveUrlFromGitHub 
+# Picks the portable .zip asset name matching the requested architecture.
+# Preference: an asset whose name carries the '-x64-'/'-arm64-' marker.
+# Fallback: when no asset carries any architecture marker (older single-build
+# releases) the first portable .zip is returned.
+function Select-PortableAssetName
 {
     param (
         [Parameter(Mandatory=$true, Position=0)]
-        [string] $Version
+        [string[]] $AssetNames,
+        [Parameter(Mandatory=$true, Position=1)]
+        [string] $Architecture
     )
-    
+
+    $Portable = @($AssetNames | Where-Object {
+        $_ -and $_.ToLower().Contains('portable') -and $_.ToLower().EndsWith('.zip')
+    })
+    if ($Portable.Count -eq 0)
+    {
+        return $null;
+    }
+
+    $ArchMarker = "-$($Architecture.ToLower())-";
+    $Matched = @($Portable | Where-Object { $_.ToLower().Contains($ArchMarker) });
+    if ($Matched.Count -gt 0)
+    {
+        return $Matched[0];
+    }
+
+    # No asset is tagged with the requested architecture. If none of the
+    # portable assets carry any architecture marker at all, treat it as an
+    # old single-build release and take the first one.
+    $Tagged = @($Portable | Where-Object { $_.ToLower() -match '-(x64|x86|arm64)-' });
+    if ($Tagged.Count -eq 0)
+    {
+        return $Portable[0];
+    }
+
+    return $null;
+}
+
+function Find-ArchiveUrlFromGitHub
+{
+    param (
+        [Parameter(Mandatory=$true, Position=0)]
+        [string] $Version,
+        [Parameter(Mandatory=$true, Position=1)]
+        [ValidateSet('x64','arm64', ignorecase=$False)]
+        [string] $Architecture
+    )
+
     $BaseUrl = 'https://api.github.com/repos/gitextensions/gitextensions/releases';
     $SelectedRelease = $null;
-    if ($Version -eq $LatestVersionName) 
+    if ($Version -eq $LatestVersionName)
     {
         $SelectedRelease = Invoke-RestMethod -Uri "$BaseUrl/latest";
         $Version = $SelectedRelease.tag_name;
         Write-Host "Selected release '$($SelectedRelease.name)'.";
     }
-    else 
+    else
     {
         $Releases = Invoke-RestMethod -Uri $BaseUrl;
         foreach ($Release in $Releases)
@@ -83,41 +131,44 @@ function Find-ArchiveUrlFromGitHub
 
     if (!($null -eq $SelectedRelease))
     {
-        foreach ($Asset in $SelectedRelease.assets)
+        $AssetNames = @($SelectedRelease.assets | ForEach-Object { $_.name });
+        $SelectedName = Select-PortableAssetName -AssetNames $AssetNames -Architecture $Architecture;
+        if (!([string]::IsNullOrWhiteSpace($SelectedName)))
         {
-            if ($Asset.name.ToLower().Contains('portable') -and $Asset.name.ToLower().EndsWith('.zip'))
-            {
-                Write-Host "Selected asset '$($Asset.name)'.";
-                return $Version,$Asset.browser_download_url;
-            }
+            $Asset = $SelectedRelease.assets | Where-Object { $_.name -eq $SelectedName } | Select-Object -First 1;
+            Write-Host "Selected asset '$($Asset.name)'.";
+            return $Version,$Asset.browser_download_url;
         }
     }
 
-    throw "Unable to find download URL for 'Git Extensions $Version' on GitHub";
+    throw "Unable to find download URL for 'Git Extensions $Version' ($Architecture) on GitHub";
 }
 
-function Find-ArchiveUrlFromAppVeyor 
+function Find-ArchiveUrlFromAppVeyor
 {
     param (
         [Parameter(Mandatory=$true, Position=0)]
-        [string] $Version
+        [string] $Version,
+        [Parameter(Mandatory=$true, Position=1)]
+        [ValidateSet('x64','arm64', ignorecase=$False)]
+        [string] $Architecture
     )
-    
+
     $UrlVersion = $Version;
-    if ($UrlVersion.StartsWith("v")) 
+    if ($UrlVersion.StartsWith("v"))
     {
         $UrlVersion = $UrlVersion.Substring(1);
     }
 
     $UrlBase = "https://ci.appveyor.com/api";
 
-    try 
+    try
     {
         if ($Version -eq $LatestVersionName)
         {
             $Url = "$UrlBase/projects/gitextensions/gitextensions/branch/master";
         }
-        else 
+        else
         {
             $Url = "$UrlBase/projects/gitextensions/gitextensions/build/$UrlVersion";
         }
@@ -125,32 +176,31 @@ function Find-ArchiveUrlFromAppVeyor
         $BuildInfo = Invoke-RestMethod -Uri $Url;
         $Version = "v$($BuildInfo.build.version)";
         $Job = $BuildInfo.build.jobs[0];
-        if ($Job.Status -eq "success") 
+        if ($Job.Status -eq "success")
         {
             $JobId = $Job.jobId;
             Write-Host "Selected build job '$JobId'.";
 
             $AssetsUrl = "$UrlBase/buildjobs/$JobId/artifacts";
             $Assets = Invoke-RestMethod -Method Get -Uri $AssetsUrl;
-            foreach ($Asset in $Assets)
+            $FileNames = @($Assets | Where-Object { $_.type -and $_.type.ToLower() -eq 'zip' } | ForEach-Object { $_.FileName });
+            $SelectedFileName = Select-PortableAssetName -AssetNames $FileNames -Architecture $Architecture;
+            if (!([string]::IsNullOrWhiteSpace($SelectedFileName)))
             {
-                if ($Asset.type.ToLower() -eq "zip" -and $Asset.FileName.ToLower().Contains('portable')) 
-                {
-                    Write-Host "Selected asset '$($Asset.FileName)'.";
-                    return $Version,($AssetsUrl + "/" + $Asset.FileName);
-                }
+                Write-Host "Selected asset '$SelectedFileName'.";
+                return $Version,($AssetsUrl + "/" + $SelectedFileName);
             }
         }
     }
-    catch 
+    catch
     {
-        if (!($_.Exception.Response.StatusCode -eq 404)) 
-        { 
+        if (!($_.Exception.Response.StatusCode -eq 404))
+        {
             throw;
         }
     }
 
-    throw "Unable to find download URL for 'Git Extensions $Version' on AppVeyor";
+    throw "Unable to find download URL for 'Git Extensions $Version' ($Architecture) on AppVeyor";
 }
 
 function Get-Application 
@@ -214,7 +264,7 @@ try
         }
     }
     
-    $SelectedVersion,$DownloadUrl = Find-ArchiveUrl -Version $Version -Source $Source;
+    $SelectedVersion,$DownloadUrl = Find-ArchiveUrl -Version $Version -Source $Source -Architecture $Architecture;
     if ($Version -eq $LatestVersionName) 
     {
         $FileName = Get-ZipFileName -Version $SelectedVersion;
